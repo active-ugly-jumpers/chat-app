@@ -27,7 +27,7 @@ const Start = ({ navigation }) => {
       <Text style={styles.title}>Chat App</Text>
       {/* Use KeyboardAvoidingView on iOS to prevent keyboard from covering form */}
       {Platform.OS === "ios" ? (
-        <KeyboardAvoidingView behavior="padding">
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1, width: "100%", justifyContent: "center", alignItems: "center" }}>
           <View style={styles.box}>
             <TextInput
               style={styles.input}

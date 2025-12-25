@@ -6,60 +6,106 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 
 const backgroundImage = require("../assets/Background Image.png");
 
+// Define available background colors
 const colors = ["#090C08", "#474056", "#8A95A5", "#B9C6AE"];
 
+// Start screen component
 const Start = ({ navigation }) => {
+  // State for user's name input
   const [name, setName] = useState("");
+  // State for selected background color
   const [bgColor, setBgColor] = useState(colors[0]);
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
-      {/* Title */}
       <Text style={styles.title}>Chat App</Text>
-
-      {/* Box */}
-      <View style={styles.box}>
-        {/* Name input */}
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Your Name"
-          placeholderTextColor="#757083"
-        />
-
-        {/* Choose color */}
-        <Text style={styles.chooseColor}>Choose Background Color:</Text>
-        <View style={styles.colorWrapper}>
-          {colors.map((color) => (
-            <TouchableOpacity
-              key={color}
-              style={[
-                styles.colorCircle,
-                { backgroundColor: color },
-                bgColor === color && styles.selected,
-              ]}
-              onPress={() => setBgColor(color)}
+      {/* Use KeyboardAvoidingView on iOS to prevent keyboard from covering form */}
+      {Platform.OS === "ios" ? (
+        <KeyboardAvoidingView behavior="padding">
+          <View style={styles.box}>
+            <TextInput
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+              placeholder="Your Name"
+              placeholderTextColor="#757083"
             />
-          ))}
-        </View>
 
-        {/* Button */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Chat", { name, bgColor })}
-        >
-          <Text style={styles.buttonText}>Start Chatting</Text>
-        </TouchableOpacity>
-      </View>
+            {/* Color selection label */}
+            <Text style={styles.chooseColor}>Choose Background Color:</Text>
+            {/* Color selection options */}
+            <View style={styles.colorWrapper}>
+              {colors.map((color) => (
+                // Touchable color circle for selecting background color
+                <TouchableOpacity
+                  key={color}
+                  style={[
+                    styles.colorCircle,
+                    { backgroundColor: color },
+                    bgColor === color && styles.selected, // Highlight if selected
+                  ]}
+                  onPress={() => setBgColor(color)}
+                />
+              ))}
+            </View>
+
+            {/* Button to navigate to Chat screen with selected options */}
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate("Chat", { name, bgColor })}
+            >
+              <Text style={styles.buttonText}>Start Chatting</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      ) : (
+        <View style={styles.box}>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Your Name"
+            placeholderTextColor="#757083"
+          />
+
+          {/* Color selection label */}
+          <Text style={styles.chooseColor}>Choose Background Color:</Text>
+          {/* Color selection options */}
+          <View style={styles.colorWrapper}>
+            {colors.map((color) => (
+              // Touchable color circle for selecting background color
+              <TouchableOpacity
+                key={color}
+                style={[
+                  styles.colorCircle,
+                  { backgroundColor: color },
+                  bgColor === color && styles.selected, // Highlight if selected
+                ]}
+                onPress={() => setBgColor(color)}
+              />
+            ))}
+          </View>
+
+          {/* Button to navigate to Chat screen with selected options */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Chat", { name, bgColor })}
+          >
+            <Text style={styles.buttonText}>Start Chatting</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </ImageBackground>
   );
 };
 
+// Styles for the Start screen components
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -122,4 +168,5 @@ const styles = StyleSheet.create({
   },
 });
 
+// Export the Start component as default
 export default Start;

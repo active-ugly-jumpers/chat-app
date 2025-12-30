@@ -1,157 +1,130 @@
-import { useState } from 'react';
+import React, { useState } from "react";
 import {
-  StyleSheet,
   View,
   Text,
-  Button,
   TextInput,
-  ImageBackground,
   TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView,
-  Alert,
-} from 'react-native';
-import { getAuth, signInAnonymously } from 'firebase/auth';
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
+
+
+const backgroundImage = require("../assets/Background Image.png");
+
+const colors = ["#090C08", "#474056", "#8A95A5", "#B9C6AE"];
 
 const Start = ({ navigation }) => {
-  const auth = getAuth();
-  const [name, setName] = useState('');
-  const [background, setBackground] = useState('');
-  const colors = ['#090C08', '#474056', '#8A95A5', '#B9C6AE'];
+  const [name, setName] = useState("");
+  const [bgColor, setBgColor] = useState(colors[0]);
 
-  const signInUser = () => {
-    signInAnonymously(auth)
-      .then((result) => {
-        navigation.navigate('Chat', {
-          userID: result.user.uid,
-          name: name,
-          background: background,
-        });
-        Alert.alert('Signed in Successfully!');
-      })
-      .catch((error) => {
-        Alert.alert('Unable to sign in, try again later.');
-      });
-  };
 
   return (
-    <View style={styles.container}>
-      {/* Background Wallpaper */}
-      <ImageBackground
-        source={require('../assets/Background Image.png')}
-        style={styles.imageBackground}
-      >
-        {/* Title of page */}
-        <Text style={styles.title}>Welcome!</Text>
-        {/* Container for username and color background selection */}
-        <View style={styles.box}>
-          {/* User Types Name */}
-          <TextInput
-            style={styles.textInput}
-            value={name}
-            onChangeText={setName}
-            placeholder="Your name"
-          />
-          {/* User Selects Background Color */}
-          <Text style={styles.chooseBgColor}>Choose Background Color</Text>
-          <View style={styles.colorButtonContainer}>
-            {colors.map((color, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.colorButton,
-                  { backgroundColor: color },
-                  background === color && styles.selectedColor,
-                ]}
-                onPress={() => setBackground(color)}
-              />
-            ))}
-          </View>
-          {/* User Navigates to Chat */}
-          <TouchableOpacity style={styles.button} onPress={signInUser}>
-            <Text style={styles.buttonText}>Start Chatting</Text>
-          </TouchableOpacity>
+    <ImageBackground
+      source={backgroundImage}
+      style={styles.background}
+    >
+      <Text style={styles.title}>Chat App</Text>
+      <View style={[styles.box, { backgroundColor: "rgba(255,255,255,0.9)" }]}> 
+        <TextInput
+          style={[styles.input, { color: "#000" }]}
+          value={name}
+          onChangeText={setName}
+          placeholder="Your Name"
+          placeholderTextColor="#757083"
+        />
+        <Text style={styles.chooseColor}>Choose Background Color:</Text>
+        <View style={styles.colorWrapper}>
+          {colors.map((color) => (
+            <TouchableOpacity
+              key={color}
+              style={[
+                styles.colorCircle,
+                { backgroundColor: color },
+                bgColor === color && styles.selected,
+              ]}
+              onPress={() => setBgColor(color)}
+              activeOpacity={0.8}
+            />
+          ))}
         </View>
-        {/* Fixes a device-specific blocked keyboard problem */}
-        {Platform.OS === 'ios' ? (
-          <KeyboardAvoidingView behavior="padding" />
-        ) : null}
-      </ImageBackground>
-    </View>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#757083" }]}
+          onPress={() => navigation.navigate("Chat", { name, bgColor })}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.buttonText, { color: "#FFF" }]}>Start Chatting</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-  },
-  imageBackground: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 45,
-    fontWeight: '600',
-    color: '#fff',
-    margin: 25,
+    fontWeight: "700",
+    color: "#FFF",
+    marginBottom: 40,
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
   box: {
-    backgroundColor: '#fff',
-    width: '88%',
-    height: '44%',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    padding: 10,
+    width: "88%",
+    padding: 20,
+    borderRadius: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 5,
   },
-  textInput: {
-    width: '88%',
-    padding: 15,
+  input: {
+    width: "100%",
+    borderColor: "#757083",
     borderWidth: 1,
-    borderRadius: 4,
-    marginTop: 15,
-    marginBottom: 15,
+    borderRadius: 5,
+    padding: 15,
     fontSize: 16,
-    fontWeight: '300',
-    opacity: 100,
   },
-  chooseBgColor: {
-    color: '#757083',
-    fontSize: 16,
-    fontWeight: '300',
-    opacity: 100,
+  chooseColor: {
+    alignSelf: "flex-start",
+    marginTop: 20,
+    color: "#757083",
+    fontSize: 14,
   },
-  colorButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  colorWrapper: {
+    flexDirection: "row",
+    marginVertical: 15,
+    justifyContent: "space-between",
+    width: "60%",
   },
-  colorButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    margin: 5,
+  colorCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#ccc",
   },
-  selectedColor: {
-    borderColor: '#c0c0c0',
-    borderWidth: 5,
+  selected: {
+    borderWidth: 3,
+    borderColor: "#5E60CE",
   },
   button: {
-    alignItems: 'center',
-    backgroundColor: '#757083',
-    borderRadius: 4,
-    height: '20%',
-    justifyContent: 'center',
-    padding: 10,
-    width: '88%',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 5,
+    marginTop: 10,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
+    fontWeight: "600",
   },
 });
 

@@ -1,27 +1,29 @@
-// Main entry point for the chat application
 import React, { useEffect } from "react";
 import { Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { getDatabase, goOffline, goOnline } from "firebase/database";
-import { getStorage } from "firebase/storage";
 import { storage } from "./config/firebaseConfig";
 
-// Import screen components
+// Import main screen components
 import Start from "./components/Start";
 import Chat from "./components/Chat";
 import { app } from "./config/firebaseConfig";
 
+
+// Create a stack navigator for screen transitions
 const Stack = createNativeStackNavigator();
-/* const storage = getStorage(app);
- */
+
 const App = () => {
-  // Get the current network connection status
+  // Monitor the current network connection status
   const connectionStatus = useNetInfo();
+  // Initialize Firebase Realtime Database instance
   const db = getDatabase(app);
 
-  // Listen for changes in network connectivity and update Firebase connection accordingly
+  // React to changes in network connectivity:
+  // - If offline, alert the user and set Firebase to offline mode
+  // - If online, set Firebase to online mode
   useEffect(() => {
     if (connectionStatus.isConnected === false) {
       Alert.alert("You are offline. Chat functionality is limited.");
@@ -33,7 +35,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {/* Set up navigation stack with Start and Chat screens */}
+      {/* Configure navigation stack with Start and Chat screens */}
       <Stack.Navigator initialRouteName="Start">
         <Stack.Screen
           name="Start"
@@ -44,8 +46,8 @@ const App = () => {
           {(props) => (
             <Chat
               {...props}
-              isConnected={connectionStatus.isConnected}
-              storage={storage}
+              isConnected={connectionStatus.isConnected} // Pass network status to Chat
+              storage={storage} // Pass Firebase storage instance to Chat
             />
           )}
         </Stack.Screen>
@@ -54,4 +56,5 @@ const App = () => {
   );
 };
 
+// Export the main App component
 export default App;

@@ -15,10 +15,6 @@ A cross-platform mobile chat app built with React Native, Expo, and Firebase.
 - Network-aware: alerts and disables features when offline
 - Accessible and screen reader friendly
 
-
-## Demo
-
-
 ## Tech Stack & Libraries
 
 - [React Native](https://reactnative.dev/)

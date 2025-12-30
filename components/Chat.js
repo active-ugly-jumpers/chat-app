@@ -34,7 +34,7 @@ const Chat = ({ route, navigation, isConnected, storage }) => {
       const cachedMessages = await AsyncStorage.getItem(STORAGE_KEY);
       if (cachedMessages) {
         setMessages(JSON.parse(cachedMessages));
-        console.log("💾 Loaded cached messages");
+        console.log("Loaded cached messages");
       }
     } catch (error) {
       console.log("Error loading cached messages:", error);

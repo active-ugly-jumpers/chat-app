@@ -3,6 +3,7 @@
 
 A cross-platform mobile chat app built with React Native, Expo, and Firebase.
 
+
 ## Features
 
 - Join a chat with a custom username and background color
@@ -14,6 +15,12 @@ A cross-platform mobile chat app built with React Native, Expo, and Firebase.
 - Media uploads to Firebase Cloud Storage
 - Network-aware: alerts and disables features when offline
 - Accessible and screen reader friendly
+
+## Screenshots
+
+<p align="center">
+	<img src="screenshots/sample.gif" alt="Chat App Demo" width="300" />
+</p>
 
 ## Tech Stack & Libraries
 
